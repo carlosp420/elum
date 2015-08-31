@@ -24,7 +24,7 @@ Usage
 -----
 .. code:: python
 
-    python elum.py blast_out.csv your_email_address > blast_out_completed.csv
+    python elum.py blast_file.csv output.csv your_email_address
 
 Installation
 ------------
