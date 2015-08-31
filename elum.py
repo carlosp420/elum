@@ -4,17 +4,17 @@ from elum.api import complete_me
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Error. Please enter filename an your email address as arguments.")
+    if len(sys.argv) < 4:
+        print("Error. Please enter input_filename, output_filename, and your email address as arguments.")
         sys.exit(1)
 
-    filename = sys.argv[1].strip()
-    email = sys.argv[2].strip()
-    with open(filename, 'r') as handle:
+    input_filename = sys.argv[1].strip()
+    output_filename = sys.argv[2].strip()
+    email = sys.argv[3].strip()
+    with open(input_filename, 'r') as handle:
         contents = handle.readlines()
 
-    result_string = complete_me(contents, email)
-    print(result_string)
+    complete_me(contents, output_filename, email)
 
 
 if __name__ == "__main__":

@@ -1,29 +1,29 @@
 from Bio import Entrez
+import pyprind
 
 
-def complete_me(content_as_list, email):
+def complete_me(content_as_list, output_filename, email):
     """
     Add metadata to the blast output file. Metadata is obtained by querying the
     NCBI database.
 
     :param content_as_list: blast output content (CSV file) as list of lines.
-    :return: string with the completed metadata.
+    :param output_filename: write line by line.
     """
     Entrez.email = email
 
-    output = []
-    append = output.append
-
-    for line in content_as_list:
+    for i in pyprind.prog_bar(range(len(content_as_list))):
+        line = content_as_list[i]
         line = line.strip()
         if line.startswith('query'):
-            append(line + '\t' + 'Title\tGeneLength')
+            with open(output_filename, 'w') as handle:
+                handle.write(line + '\tGeneLength\tTitle\n')
             continue
 
         line_complement = _get_metadata_as_string(line)
 
-        append(line + '\t' + line_complement)
-    return '\n'.join(output)
+        with open(output_filename, 'a') as handle:
+            handle.write(line + '\t' + line_complement + '\n')
 
 
 def _get_metadata_as_string(line):
@@ -59,13 +59,13 @@ def _query_ncbi(gi):
 def _convert_metadata_to_line(metadata):
     out = ''
     try:
-        out += metadata['Title']
+        out += str(metadata['Length']) + '\t'
     except KeyError:
         out += '\t'
 
     try:
-        out += str(metadata['Length'])
+        out += metadata['Title']
     except KeyError:
-        out += '\t'
+        pass
 
     return out
